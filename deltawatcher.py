@@ -57,6 +57,7 @@ def send_to_android(text, title, ty):
     except Exception as e:
         print('Error sending message:', e)
 
+app = Flask(__name__)
 
 @app.route('/api/save_token', methods=['POST'])
 def handle_message():
