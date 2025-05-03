@@ -110,6 +110,7 @@ class SocketServerThread(threading.Thread):
 server_thread = SocketServerThread()
 server_thread.start()
 
+init()
 
 lastDelta = ""
 lastUnder = ""
