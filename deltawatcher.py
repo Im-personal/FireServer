@@ -4,7 +4,9 @@ from bs4 import BeautifulSoup
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import messaging
-from flask import Flask, request
+import socket
+import threading
+import time
 
 def getLastTitle(name):
     res = requests.get(f'https://otvet.mail.ru/go-proxy/answer_json?q={name}&num=1&sf=0&sort=date')
@@ -57,17 +59,54 @@ def send_to_android(text, title, ty):
     except Exception as e:
         print('Error sending message:', e)
 
-app = Flask(__name__)
 
-@app.route('/api/save_token', methods=['POST'])
-def handle_message():
-    data = request.json  # Получаем данные от Android
-    print("Получено сообщение:", data)
-    
-    # Здесь можно сохранить данные в БД или выполнить другие действия
-    response = {"status": "success", "message": "Данные получены!"}
-    return jsonify(response)
+class SocketServerThread(threading.Thread):
+    def __init__(self, host='0.0.0.0', port=12345):
+        super().__init__()
+        self.host = host
+        self.port = port
+        self.running = True
+        self.daemon = True  # Автоматическое завершение при выходе из main
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)  # Сервер доступен на всех интерфейсах
+    def run(self):
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server.bind((self.host, self.port))
+        server.listen(1)
+        print(f"[Сервер] Запущен на {self.host}:{self.port}")
+
+        while self.running:
+            try:
+                client, addr = server.accept()
+                print(f"[Сервер] Подключен клиент: {addr}")
+                
+                data = client.recv(1024).decode('utf-8')
+                print(f"[Сервер] Получены данные: {data}")
+                
+                client.send("OK".encode('utf-8'))
+                client.close()
+                
+            except Exception as e:
+                if self.running:
+                    print(f"[Сервер] Ошибка: {e}")
+
+        server.close()
+        print("[Сервер] Остановлен")
+
+    def stop(self):
+        self.running = False
+        # Создаем фейковое подключение чтобы выйти из accept()
+        try:
+            socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect(
+                (self.host, self.port))
+        except:
+            pass
+
+server_thread = SocketServerThread()
+server_thread.start()
+
+
+while True:
+    print("...")
+    time.sleep(5)
+        
 
