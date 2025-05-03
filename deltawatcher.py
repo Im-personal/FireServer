@@ -122,6 +122,10 @@ lastBluesky = ""
 lastNewsletter = ""
 
 while True:
+
+    if fcm_token == "...":
+        continue
+    
     a = getLastTitle('Deltarune')
     
     if a != lastDelta:
