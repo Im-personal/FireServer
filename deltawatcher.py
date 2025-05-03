@@ -162,14 +162,14 @@ while True:
     if a != lastBluesky:
         lastBluesky = a;
         print("new Bluesky!")
-        if not send_to_android('Новый пост от Тоби!', a, 'bluesky','https://bsky.app/profile/tobyfox.undertale.com'):
+        if not send_to_android('Новый пост от Тоби!', a, 'bskytoby','https://bsky.app/profile/tobyfox.undertale.com'):
             lastBluesky = ''
 
     a = checkForNewsletter()
     if a != lastNewsletter:
         lastNewsletter = a;
         print("news Letter!")
-        if not send_to_android('НОВОЕ ПИСЬМО!!!', a, 'newsletter','https://mail.yandex.ru/#inbox'):
+        if not send_to_android('НОВОЕ ПИСЬМО!!!', a, 'newslet','https://mail.yandex.ru/#inbox'):
             lastNewsletter=''
     
     time.sleep(5)
