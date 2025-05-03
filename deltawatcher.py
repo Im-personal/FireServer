@@ -61,7 +61,7 @@ def send_to_android(text, title, ty):
 
 
 class SocketServerThread(threading.Thread):
-    def __init__(self, host='0.0.0.0', port=12345):
+    def __init__(self, host='0.0.0.0', port=5000):
         super().__init__()
         self.host = host
         self.port = port
