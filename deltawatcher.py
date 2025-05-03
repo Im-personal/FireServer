@@ -11,7 +11,7 @@ import time
 def getLastTitle(name):
     res = requests.get(f'https://otvet.mail.ru/go-proxy/answer_json?q={name}&num=1&sf=0&sort=date')
     js = json.loads(res.text)
-    return f"{js['results'][0]['question']}"
+    return [js['results'][0]['question'],js['results'][0]['url']]
 
 def getTitles():
     print(getLastTitle('Deltarune'))
@@ -42,13 +42,16 @@ def init():
 
 fcm_token = '...'
 
-def send_to_android(text, title, ty):
-
+def send_to_android(title,text, ty,link):
+    if fcm_token == '...':
+        return False
+    
     message = messaging.Message(
     data={
         'text': text, # Your text variable
         'title': title,
-        'type': ty
+        'type': ty,
+        'link': link
     },
     token=fcm_token, # The registration token of the device
     )
@@ -56,8 +59,10 @@ def send_to_android(text, title, ty):
     try:
         response = messaging.send(message)
         print('Successfully sent message:', response)
+        return True
     except Exception as e:
         print('Error sending message:', e)
+        return False
 
 
 class SocketServerThread(threading.Thread):
@@ -81,7 +86,8 @@ class SocketServerThread(threading.Thread):
                 
                 data = client.recv(1024).decode('utf-8')
                 print(f"[Сервер] Получены данные: {data}")
-                
+                global fcm_token
+                fcm_token = data
                 client.send("OK".encode('utf-8'))
                 client.close()
                 
@@ -105,8 +111,67 @@ server_thread = SocketServerThread()
 server_thread.start()
 
 
+lastDelta = ""
+lastUnder = ""
+lastDeltaRus = ""
+lastUnderRus1 = ""
+lastUnderRus2 = ""
+
+lastBluesky = ""
+lastNewsletter = ""
+
 while True:
-    print("...")
+    a = getLastTitle('Deltarune')
+    
+    if a != lastDelta:
+        lastDelta = a;
+        print("new Delta!")
+        if not send_to_android('Новый вопрос!', a[0], 'delta',a[1]):
+            lastDelta = ''
+        
+    
+    a = getLastTitle('Undertale')
+    if a != lastUnder:
+        lastUnder = a;
+        print("new Under!")
+        if not send_to_android('Новый вопрос!', a[0], 'under',a[1]):
+            lastUnder=''
+        
+    a = getLastTitle('Дельтарун')
+    if a != lastDeltaRus:
+        lastDeltaRus = a;
+        print("new Дельта!")
+        if not send_to_android('Новый вопрос!', a[0], 'deltarus',a[1]):
+            lastDeltaRus=''
+        
+    a = getLastTitle('Андертейл')
+    if a != lastUnderRus1:
+        lastUnderRus1 = a;
+        print("new тейл!")
+        if not send_to_android('Новый вопрос!', a[0], 'underus1',a[1]):
+            lastUnderRus1=''
+        
+    a = getLastTitle('Андертеил')
+    if a != lastUnderRus2:
+        lastUnderRus2 = a;
+        print("new теил!")
+        if not send_to_android('Новый вопрос!', a[0], 'underus2',a[1]):
+            lastUnderRus2=''
+
+    a = getLastBluesky()
+    if a != lastBluesky:
+        lastBluesky = a;
+        print("new Bluesky!")
+        if not send_to_android('Новый пост от Тоби!', a, 'bluesky','https://bsky.app/profile/tobyfox.undertale.com'):
+            lastBluesky = ''
+
+    a = checkForNewsletter()
+    if a != lastNewsletter:
+        lastNewsletter = a;
+        print("news Letter!")
+        if not send_to_android('НОВОЕ ПИСЬМО!!!', a, 'newsletter','https://mail.yandex.ru/#inbox'):
+            lastNewsletter=''
+    
     time.sleep(5)
         
 
