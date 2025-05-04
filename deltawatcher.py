@@ -8,6 +8,7 @@ import socket
 import threading
 import time
 
+
 def getLastTitle(name):
     res = requests.get(f'https://otvet.mail.ru/go-proxy/answer_json?q={name}&num=1&sf=0&sort=date')
     js = json.loads(res.text)
