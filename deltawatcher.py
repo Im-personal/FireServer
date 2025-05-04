@@ -125,58 +125,59 @@ while True:
 
     if fcm_token == "...":
         continue
-    
-    a = getLastTitle('Deltarune')
-    
-    if a != lastDelta:
-        lastDelta = a;
-        print("new Delta!")
-        if not send_to_android('Новый вопрос!', a[0], 'delta',a[1]):
-            lastDelta = ''
+    try:
+        a = getLastTitle('Deltarune')
         
-    
-    a = getLastTitle('Undertale')
-    if a != lastUnder:
-        lastUnder = a;
-        print("new Under!")
-        if not send_to_android('Новый вопрос!', a[0], 'under',a[1]):
-            lastUnder=''
+        if a != lastDelta:
+            lastDelta = a;
+            print("new Delta!")
+            if not send_to_android('Новый вопрос!', a[0], 'delta',a[1]):
+                lastDelta = ''
+            
         
-    a = getLastTitle('Дельтарун')
-    if a != lastDeltaRus:
-        lastDeltaRus = a;
-        print("new Дельта!")
-        if not send_to_android('Новый вопрос!', a[0], 'deltarus',a[1]):
-            lastDeltaRus=''
-        
-    a = getLastTitle('Андертейл')
-    if a != lastUnderRus1:
-        lastUnderRus1 = a;
-        print("new тейл!")
-        if not send_to_android('Новый вопрос!', a[0], 'underus1',a[1]):
-            lastUnderRus1=''
-        
-    a = getLastTitle('Андертеил')
-    if a != lastUnderRus2:
-        lastUnderRus2 = a;
-        print("new теил!")
-        if not send_to_android('Новый вопрос!', a[0], 'underus2',a[1]):
-            lastUnderRus2=''
+        a = getLastTitle('Undertale')
+        if a != lastUnder:
+            lastUnder = a;
+            print("new Under!")
+            if not send_to_android('Новый вопрос!', a[0], 'under',a[1]):
+                lastUnder=''
+            
+        a = getLastTitle('Дельтарун')
+        if a != lastDeltaRus:
+            lastDeltaRus = a;
+            print("new Дельта!")
+            if not send_to_android('Новый вопрос!', a[0], 'deltarus',a[1]):
+                lastDeltaRus=''
+            
+        a = getLastTitle('Андертейл')
+        if a != lastUnderRus1:
+            lastUnderRus1 = a;
+            print("new тейл!")
+            if not send_to_android('Новый вопрос!', a[0], 'underus1',a[1]):
+                lastUnderRus1=''
+            
+        a = getLastTitle('Андертеил')
+        if a != lastUnderRus2:
+            lastUnderRus2 = a;
+            print("new теил!")
+            if not send_to_android('Новый вопрос!', a[0], 'underus2',a[1]):
+                lastUnderRus2=''
 
-    a = getLastBluesky()
-    if a != lastBluesky:
-        lastBluesky = a;
-        print("new Bluesky!")
-        if not send_to_android('Новый пост от Тоби!', a, 'bskytoby','https://bsky.app/profile/tobyfox.undertale.com'):
-            lastBluesky = ''
+        a = getLastBluesky()
+        if a != lastBluesky:
+            lastBluesky = a;
+            print("new Bluesky!")
+            if not send_to_android('Новый пост от Тоби!', a, 'bskytoby','https://bsky.app/profile/tobyfox.undertale.com'):
+                lastBluesky = ''
 
-    a = checkForNewsletter()
-    if a != lastNewsletter:
-        lastNewsletter = a;
-        print("news Letter!")
-        if not send_to_android('НОВОЕ ПИСЬМО!!!', a, 'newslet','https://mail.yandex.ru/#inbox'):
-            lastNewsletter=''
-    
+        a = checkForNewsletter()
+        if a != lastNewsletter:
+            lastNewsletter = a;
+            print("news Letter!")
+            if not send_to_android('НОВОЕ ПИСЬМО!!!', a, 'newslet','https://mail.yandex.ru/#inbox'):
+                lastNewsletter=''
+    except Exception as e:
+        print(f"ERROR! {e}")
     time.sleep(5)
         
 
