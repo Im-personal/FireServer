@@ -88,7 +88,9 @@ class SocketServerThread(threading.Thread):
                 data = client.recv(1024).decode('utf-8')
                 print(f"[Сервер] Получены данные: {data}")
                 global fcm_token
-                fcm_token = data
+                if len(fcm_token)>50:
+                    fcm_token = data
+                    print("токен обновлен!")
                 client.send("OK".encode('utf-8'))
                 client.close()
                 
