@@ -88,6 +88,7 @@ class SocketServerThread(threading.Thread):
                 data = client.recv(1024).decode('utf-8')
                 print(f"[Сервер] Получены данные: {data}")
                 global fcm_token
+                print(len(fcm_token))
                 if len(fcm_token)>50:
                     fcm_token = data
                     print("токен обновлен!")
