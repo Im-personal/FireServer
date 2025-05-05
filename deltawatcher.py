@@ -181,6 +181,6 @@ while True:
                 lastNewsletter=''
     except Exception as e:
         print(f"ERROR! {e}")
-    time.sleep(5)
+    time.sleep(30)
         
 
